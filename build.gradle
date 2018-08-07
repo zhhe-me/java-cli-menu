@@ -1,6 +1,7 @@
 
 plugins {
     id 'java-library'
+    id 'idea'
 }
 
 group = 'me.zhhe.cli'
@@ -18,4 +19,11 @@ dependencies {
 
 repositories {
     jcenter()
+}
+
+idea {
+    project {
+        jdkName = '1.8'
+        languageLevel = '1.8'
+    }
 }
