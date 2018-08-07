@@ -1,0 +1,21 @@
+
+plugins {
+    id 'java-library'
+}
+
+group = 'me.zhhe.cli'
+version = '0.1'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    implementation 'com.google.guava:guava:23.0'
+    implementation 'org.apache.commons:commons-lang3:3.7'
+
+    testImplementation 'junit:junit:4.12'
+}
+
+repositories {
+    jcenter()
+}
