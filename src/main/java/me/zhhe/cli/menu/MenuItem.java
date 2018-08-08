@@ -10,33 +10,32 @@ import java.util.function.Supplier;
  */
 class MenuItem {
 
-    private final MenuContext context;
-    private final Supplier<String> titleSupplier;
-    private final Supplier<String> questionSupplier;
-    private final Function<String, AnswerResult> answerChecker;
+    final MenuContext context;
+    final String argument;
+    final String alias;
+    final String format;
+    final String header;
+    final Supplier<?> value;
+    final Supplier<String> description;
+    final Function<String, InputResult> answerChecker;
 
-    MenuItem(MenuContext context, Supplier<String> titleSupplier,
-             Supplier<String> questionSupplier, Function<String, AnswerResult> answerConsumer) {
-        this.context = context;
-        this.titleSupplier = titleSupplier;
-        this.questionSupplier = questionSupplier;
-        this.answerChecker = answerConsumer;
+    MenuItem(final MenuItemBuilder builder) {
+        this.context = builder.context;
+        this.argument = builder.argument;
+        this.alias = builder.alias;
+        this.format = builder.format;
+        this.value = builder.value;
+        this.header = builder.header;
+        this.description = builder.description;
+        this.answerChecker = builder.inputChecker;
     }
 
     String getTitle() {
-        return titleSupplier.get();
+        return description.get();
     }
 
-    void execute() {
-        final String question = String.format("%s.[%s]", questionSupplier.get(), "default");
-        context.getOutputWriter().printQuestion(question);
-
-        final String answer = context.getInputReader().read();
-        final AnswerResult result = answerChecker.apply(answer);
-        if (!result.isCorrect()) {
-            context.getOutputWriter().printAnswererWrongly(result.getReason());
-            execute();
-        }
+    InputResult execute(final String input) {
+        return answerChecker.apply(input);
     }
 
     State getState() {

@@ -32,46 +32,62 @@ public class Menu {
         this.items = Collections.unmodifiableList(items);
     }
 
+
     public void render() {
-        final List<String> itemTitles = items.stream().map(item -> item.getTitle())
-                .collect(Collectors.toList());
-        context.getOutputWriter().printMainMenu(title, itemTitles);
+        renderMenu();
 
-
-        while (true) {
-            final MenuItem menuItem = selectMenuItem();
-            menuItem.execute();
-
-            if (State.TERMINATED == menuItem.getState())
-                break;
-        }
+        execute();
 
         context.close();
     }
 
-    private MenuItem selectMenuItem() {
-        context.getOutputWriter().printEnterOption();
-        final String line = context.getInputReader().read();
-        final String msg = String.format("Invalid option. It must be 1~%d.", items.size());
-        if (StringUtils.isBlank(line)) {
-            context.getOutputWriter().printEnteredOptionWrongly(msg);
-            return selectMenuItem();
-        }
-        int i = 0;
-        try {
-            i = Integer.parseInt(line.trim());
-        } catch (Exception e) {
-            context.getOutputWriter().printEnteredOptionWrongly(msg);
-            return selectMenuItem();
-        }
-        if (i < 1 || i > items.size()) {
-            context.getOutputWriter().printEnteredOptionWrongly(msg);
-            return selectMenuItem();
-        }
+    private void renderMenu() {
+        context.getOutputWriter().printMainMenu(title, items);
 
-        final MenuItem menuItem = items.get(i - 1);
-        context.getOutputWriter().printEnteredMenuItem(menuItem.getTitle());
-        return menuItem;
+        context.getOutputWriter().printAttachedMenuItem("R): refresh menu;  X): exit");
+    }
+
+    private void execute() {
+        final String msg = String.format("Invalid option. It must be 1~%d.", items.size());
+
+        while (true) {
+            context.getOutputWriter().printEnterOption();
+            final String input = context.getInputReader().read().trim();
+            if (StringUtils.isBlank(input)) {
+                context.getOutputWriter().printEnteredOptionWrongly(msg);
+                continue;
+            }
+            int i = 0;
+
+            final int idx = input.indexOf(' ');
+            final String num = idx==-1 ? input : input.substring(0, idx);
+            if ("R".equalsIgnoreCase(num)) {
+                renderMenu();
+                continue;
+            }
+            if ("X".equalsIgnoreCase(num)) {
+                break;
+            }
+
+            try {
+                i = Integer.parseInt(num);
+            } catch (Exception e) {
+                context.getOutputWriter().printEnteredOptionWrongly(msg);
+                continue;
+            }
+            if (i < 1 || i > items.size()) {
+                context.getOutputWriter().printEnteredOptionWrongly(msg);
+                continue;
+            }
+
+            final MenuItem menuItem = items.get(i - 1);
+
+            final InputResult inputResult = menuItem.execute(input.substring(idx + 1).trim());
+            if (!inputResult.isCorrect()) {
+                context.getOutputWriter().printInputWrongly(inputResult.getReason());
+                continue;
+            }
+        }
     }
 
 }

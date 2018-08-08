@@ -10,15 +10,8 @@ import java.util.function.Supplier;
  */
 class TerminatedMenuItem extends MenuItem {
 
-    TerminatedMenuItem(MenuContext context, Supplier<String> titleSupplier,
-                       Supplier<String> questionSupplier, Function<String,
-            AnswerResult> answerConsumer) {
-        super(context, titleSupplier, questionSupplier, answerConsumer);
-    }
-
-    @Override
-    void execute() {
-        ;
+    TerminatedMenuItem(MenuItemBuilder builder) {
+        super(builder);
     }
 
     @Override

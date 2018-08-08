@@ -10,16 +10,14 @@ import java.util.List;
  */
 public interface OutputWriter extends Closeable {
 
-    void printMainMenu(String title, List<String> items);
+    void printMainMenu(String title, List<MenuItem> items);
+
+    void printAttachedMenuItem(String msg);
 
     void printEnterOption();
 
     void printEnteredOptionWrongly(String msg);
 
-    void printEnteredMenuItem(String msg);
-
-    void printQuestion(String msg);
-
-    void printAnswererWrongly(String msg);
+    void printInputWrongly(String msg);
 
 }

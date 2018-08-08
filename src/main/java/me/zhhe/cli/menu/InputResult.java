@@ -5,19 +5,19 @@ package me.zhhe.cli.menu;
  * @author zhhe.me@gmail.com.
  * @since 7/8/2018
  */
-public class AnswerResult {
+public class InputResult {
 
-    public static final AnswerResult CORRECT = new AnswerResult(true, null);
+    public static final InputResult CORRECT = new InputResult(true, null);
 
     private final boolean correct;
     private final String reason;
 
-    private AnswerResult(boolean correct, String reason) {
+    private InputResult(boolean correct, String reason) {
         this.correct = correct;
         this.reason = reason;
     }
 
-    public AnswerResult(final String reason) {
+    public InputResult(final String reason) {
         this(false, reason);
     }
 

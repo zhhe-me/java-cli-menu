@@ -1,10 +1,13 @@
 /* &copy; 2018 zhhe.me@gmail.com. */
 package me.zhhe.cli.menu;
 
+import com.google.common.base.MoreObjects;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author zhhe.me@gmail.com.
@@ -12,6 +15,8 @@ import java.util.List;
  */
 class CliWriter implements OutputWriter {
 
+    private static final String START = " ";
+    private static final String START_PARAM_TEXT = StringUtils.repeat(' ', 10);
 
     @Override
     public void close() throws IOException {
@@ -19,19 +24,45 @@ class CliWriter implements OutputWriter {
     }
 
     @Override
-    public void printMainMenu(String title, List<String> items) {
-        final String formattedTitle = String.format(" *    %s   * ", title);
-        final String _s = StringUtils.repeat('=', formattedTitle.length());
-        System.out.format("%n%s%n%s%n%s%n%n", _s, formattedTitle, _s);
+    public void printMainMenu(String title, List<MenuItem> items) {
+//        final String formattedTitle = String.format(" *    %s   * ", title);
+//        final String _s = StringUtils.repeat('=', formattedTitle.length());
+//        System.out.format("%n%s%n%s%n%s%n%n", _s, formattedTitle, _s);
 
-        for (int i = 0; i < items.size(); i++) {
-            System.out.format("%d) %s%n", i+1, items.get(i));
-        }
+        int[] idx = {1};
+        items.stream().forEach(e -> printMeneItem(idx[0]++, e));
+    }
+
+    private void printMeneItem(final int no, final MenuItem item) {
+        System.out.format("%n%s%d) %s,%s %s [%s]%n",
+                START, no, getSafeValue(item.argument), getSafeValue(item.alias),
+                getSafeValue(item.format), getSafeValue(item.value));
+
+        if (StringUtils.isNoneBlank(item.header))
+            System.out.format("%s%s%n", START_PARAM_TEXT, item.header);
+
+        final String desc = getSafeValue(item.description);
+        if (StringUtils.isNotBlank(desc))
+            System.out.format("%n%s%s%n", START_PARAM_TEXT, desc);
+    }
+
+    private String getSafeValue(final String value) {
+        return MoreObjects.firstNonNull(value, "");
+    }
+
+    private String getSafeValue(Supplier<?> supplier) {
+        return supplier==null ? "" : MoreObjects.firstNonNull(supplier.get(), "").toString();
     }
 
     @Override
+    public void printAttachedMenuItem(String msg) {
+        System.out.format("%n%s--%n%s%s%n", START, START, msg);
+    }
+
+
+    @Override
     public void printEnterOption() {
-        System.out.format("%n%nEnter option: ");
+        System.out.format("%n%nYour input [# value]: ");
     }
 
     @Override
@@ -40,17 +71,7 @@ class CliWriter implements OutputWriter {
     }
 
     @Override
-    public void printEnteredMenuItem(String title) {
-        System.out.format("[Item: %s]%n", title);
-    }
-
-    @Override
-    public void printQuestion(String msg) {
-        System.out.format("  %s: ", msg);
-    }
-
-    @Override
-    public void printAnswererWrongly(String msg) {
+    public void printInputWrongly(String msg) {
         System.out.format("  >! %s%n", msg);
     }
 }

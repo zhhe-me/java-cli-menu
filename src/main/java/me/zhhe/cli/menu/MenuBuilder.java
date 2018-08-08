@@ -3,8 +3,6 @@ package me.zhhe.cli.menu;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * A builder for {@link Menu}.
@@ -32,18 +30,17 @@ public class MenuBuilder {
         return this;
     }
 
-    /** add a {@link MenuItem}. */
-    public MenuBuilder menuItem(Supplier<String> titleSupplier,
-                                Supplier<String> questionSupplier,
-                                Function<String, AnswerResult> answerChecker) {
+    public MenuItemBuilder item() {
+        return new MenuItemBuilder(this, context);
+    }
 
-        items.add(new MenuItem(context, titleSupplier, questionSupplier, answerChecker));
+    MenuBuilder item(final MenuItem item) {
+        items.add(item);
         return this;
     }
 
     /** build {@link Menu} instance. */
     public Menu build() {
-        items.add(new TerminatedMenuItem(context, () -> "Done", null, null));
         return new Menu(context, title, items);
     }
 

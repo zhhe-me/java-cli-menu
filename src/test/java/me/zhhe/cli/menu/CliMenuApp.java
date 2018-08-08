@@ -11,9 +11,16 @@ class CliMenuApp {
         final MenuBuilder builder = MenuBuilder.defaultBuilder();
         builder
                 .menuTitle("Set Antlr parameters")
-                .menuItem(()->"Menu 1",
-                        ()->"Question 1",
-                        ac -> ac.equals("1") ? AnswerResult.CORRECT : new AnswerResult("Bad"))
+                .item()
+                    .argument("--grammar").alias("-g").format("Grammar").value(()->"Csv")
+                    .header("specify grammar name")
+                    .description(()->"It should be same with file name of your .g4")
+                    .inputChecker(input -> input.trim().equals("1") ? InputResult.CORRECT : new InputResult("Bad"))
+                    .done()
+                .item()
+                    .argument("--startRule").alias("-r").value("token")
+                    .header("start rule name. \"token\" is a special value.")
+                    .done()
                 .build()
                 .render();
 
