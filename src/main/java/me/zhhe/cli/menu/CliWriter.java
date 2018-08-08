@@ -25,7 +25,7 @@ class CliWriter implements OutputWriter {
         System.out.format("%n%s%n%s%n%s%n%n", _s, formattedTitle, _s);
 
         for (int i = 0; i < items.size(); i++) {
-            System.out.format("%d) %s%n", i+1, items);
+            System.out.format("%d) %s%n", i+1, items.get(i));
         }
     }
 
