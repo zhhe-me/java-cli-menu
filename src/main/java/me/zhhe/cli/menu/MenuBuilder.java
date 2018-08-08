@@ -15,7 +15,16 @@ public class MenuBuilder {
     private final List<MenuItem> items = new ArrayList<>();
     private String title;
 
-    private final MenuContext context = new MenuContext(new CliReader(), new CliWriter());
+    private final MenuContext context;
+
+    /** default builder for CLI. */
+    public static MenuBuilder defaultBuilder() {
+        return new MenuBuilder(new MenuContext(new CliReader(), new CliWriter()));
+    }
+
+    public MenuBuilder(final MenuContext context) {
+        this.context = context;
+    }
 
     /** set menu's title. */
     public MenuBuilder menuTitle(final String title) {

@@ -8,7 +8,7 @@ package me.zhhe.cli.menu;
 class CliMenuApp {
 
     public static void main(final String... args) {
-        final MenuBuilder builder = new MenuBuilder();
+        final MenuBuilder builder = MenuBuilder.defaultBuilder();
         builder
                 .menuTitle("Set Antlr parameters")
                 .menuItem(()->"Menu 1",
