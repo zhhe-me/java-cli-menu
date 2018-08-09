@@ -44,7 +44,7 @@ Your input [# value]: x
 Back to main, let's continue.
 ```
 
-Just try to run CliMenuSample.java with input above.
+Just try to run [CliMenuSample.java](https://github.com/zhhe-me/java-cli-menu/blob/master/src/test/java/me/zhhe/cli/menu/CliMenuSample.java) with input above.
 
 This project is on the way and changes will happen any time without notification until it gets GA.
 
