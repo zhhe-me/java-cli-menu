@@ -82,9 +82,10 @@ public class Menu {
 
             final MenuItem menuItem = items.get(i - 1);
 
-            final InputResult inputResult = menuItem.execute(input.substring(idx + 1).trim());
-            if (!inputResult.isCorrect()) {
-                context.getOutputWriter().printInputWrongly(inputResult.getReason());
+            try {
+                menuItem.execute(input.substring(idx + 1).trim());
+            } catch (IllegalArgumentException e) {
+                context.getOutputWriter().printInputWrongly(e.getMessage());
                 continue;
             }
         }

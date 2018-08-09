@@ -1,6 +1,7 @@
 /* &copy; 2018 zhhe.me@gmail.com. */
 package me.zhhe.cli.menu;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -16,12 +17,13 @@ public class MenuItemBuilder {
 
     final MenuContext context;
     String argument;
+    String argValue;
     String alias;
     String format;
     String header;
     Supplier<?> value;
     Supplier<String> description;
-    Function<String, InputResult> inputChecker;
+    Consumer<String> inputChecker;
 
     MenuItemBuilder(@Nonnull final MenuBuilder menuBuilder, @Nonnull final MenuContext context) {
         this.menuBuilder = menuBuilder;
@@ -30,6 +32,12 @@ public class MenuItemBuilder {
 
     public MenuItemBuilder argument(final String argument) {
         this.argument = argument;
+        return this;
+    }
+
+    public MenuItemBuilder argument(final String argument, final String argValue) {
+        this.argument = argument;
+        this.argValue = argValue;
         return this;
     }
 
@@ -63,7 +71,8 @@ public class MenuItemBuilder {
         return this;
     }
 
-    public MenuItemBuilder inputChecker(final Function<String, InputResult> inputChecker) {
+    /** specifiy input checker which should throw {@link IllegalArgumentException} in case of invalid input. */
+    public MenuItemBuilder inputChecker(final Consumer<String> inputChecker) {
         this.inputChecker = inputChecker;
         return this;
     }

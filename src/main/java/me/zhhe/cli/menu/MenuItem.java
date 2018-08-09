@@ -1,7 +1,7 @@
 /* &copy; 2018 zhhe.me@gmail.com. */
 package me.zhhe.cli.menu;
 
-import java.util.function.Function;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -17,7 +17,7 @@ class MenuItem {
     final String header;
     final Supplier<?> value;
     final Supplier<String> description;
-    final Function<String, InputResult> answerChecker;
+    final Consumer<String> inputChecker;
 
     MenuItem(final MenuItemBuilder builder) {
         this.context = builder.context;
@@ -27,15 +27,15 @@ class MenuItem {
         this.value = builder.value;
         this.header = builder.header;
         this.description = builder.description;
-        this.answerChecker = builder.inputChecker;
+        this.inputChecker = builder.inputChecker;
     }
 
     String getTitle() {
         return description.get();
     }
 
-    InputResult execute(final String input) {
-        return answerChecker.apply(input);
+    void execute(final String input) {
+        inputChecker.accept(input);
     }
 
     State getState() {

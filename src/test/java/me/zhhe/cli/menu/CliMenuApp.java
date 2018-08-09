@@ -15,7 +15,7 @@ class CliMenuApp {
                     .argument("--grammar").alias("-g").format("Grammar").value(()->"Csv")
                     .header("specify grammar name")
                     .description(()->"It should be same with file name of your .g4")
-                    .inputChecker(input -> input.trim().equals("1") ? InputResult.CORRECT : new InputResult("Bad"))
+                    .inputChecker(input -> { if (!input.trim().equals("1")) throw new IllegalArgumentException("Only 1 is acceptable."); })
                     .done()
                 .item()
                     .argument("--startRule").alias("-r").value("token")
