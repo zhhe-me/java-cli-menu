@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -21,6 +22,16 @@ class CliWriter implements OutputWriter {
     @Override
     public void close() throws IOException {
         ;
+    }
+
+    @Override
+    public void printFailedChecks(Map<MenuItem, String[]> faileChecks) {
+        if (faileChecks.isEmpty())
+            return;
+
+        System.out.format(" Wrong arguments:%n");
+        faileChecks.forEach( (k, vs) -> System.out.format("   %s: [%s]%n       %s%n", k.argument, vs[0], vs[1]));
+
     }
 
     @Override

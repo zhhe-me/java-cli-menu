@@ -12,7 +12,7 @@ class CliMenuApp {
         builder
                 .menuTitle("Set Antlr parameters")
                 .item()
-                    .argument("--grammar").alias("-g").format("Grammar").value(()->"Csv")
+                    .argument("--grammar", "it's an invalid value").alias("-g").format("Grammar").value(()->"Csv")
                     .header("specify grammar name")
                     .description(()->"It should be same with file name of your .g4")
                     .inputChecker(input -> { if (!input.trim().equals("1")) throw new IllegalArgumentException("Only 1 is acceptable."); })

@@ -2,7 +2,9 @@
 package me.zhhe.cli.menu;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A builder for {@link Menu}.
@@ -12,6 +14,7 @@ import java.util.List;
 public class MenuBuilder {
     private final List<MenuItem> items = new ArrayList<>();
     private String title;
+    private final Map<MenuItem, String[]> failedChecks = new HashMap<>();
 
     private final MenuContext context;
 
@@ -39,9 +42,13 @@ public class MenuBuilder {
         return this;
     }
 
+    void logFailedCheck(final MenuItem item, final String[] msg) {
+        failedChecks.put(item, msg);
+    }
+
     /** build {@link Menu} instance. */
     public Menu build() {
-        return new Menu(context, title, items);
+        return new Menu(context, title, items, failedChecks);
     }
 
 }

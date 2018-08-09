@@ -1,6 +1,8 @@
 /* &copy; 2018 zhhe.me@gmail.com. */
 package me.zhhe.cli.menu;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -78,7 +80,17 @@ public class MenuItemBuilder {
     }
 
     public MenuBuilder done() {
-        menuBuilder.item(new MenuItem(this));
+        final MenuItem item = new MenuItem(this);
+        menuBuilder.item(item);
+
+        if (StringUtils.isNotBlank(argValue)) {
+            try {
+                item.execute(argValue);
+            } catch (IllegalArgumentException e) {
+                menuBuilder.logFailedCheck(item, new String[]{argValue, e.getMessage()});
+            }
+        }
+
         return menuBuilder;
     }
 }
