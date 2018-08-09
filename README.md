@@ -31,3 +31,7 @@ Your input [# value]: X				# complete configuration. start run your logic
 Just try to run CliMenuApp.java with input above.
 
 This project is on the way and changes will happen any time without notification until it gets GA.
+
+**Here is flow Java CLI Menu likes to support:**
+
+![java-cli-menu-flow-0](README.assets/java-cli-menu-flow-0.png)
