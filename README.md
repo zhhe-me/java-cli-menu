@@ -1,5 +1,5 @@
 # java-cli-menu
-A menu for Java CLI.
+An interactive menu for Java CLI.
 
 Idealy, a Java command app can be trigger by ```java -cp <class> <params>```. But sometimes, a menu based configuration is useful and convinient. The interaction looks like:
 
