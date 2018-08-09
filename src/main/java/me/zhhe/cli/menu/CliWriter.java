@@ -43,7 +43,7 @@ class CliWriter implements OutputWriter {
             return;
 
         System.out.format(" Wrong arguments:%n");
-        faileChecks.forEach( (k, vs) -> System.out.format("   %s: [%s]%n       %s%n", k.argument, vs[0], vs[1]));
+        faileChecks.forEach( (k, vs) -> System.out.format("   -%s: [%s]%n       %s%n", k.argName, vs[0], vs[1]));
 
     }
 
@@ -58,8 +58,8 @@ class CliWriter implements OutputWriter {
     }
 
     private void printMeneItem(final int no, final MenuItem item) {
-        System.out.format("%n%s%d) %s,%s %s [%s]%n",
-                START, no, getSafeValue(item.argument), getSafeValue(item.alias),
+        System.out.format("%n%s%d) -%s,--%s %s [%s]%n",
+                START, no, getSafeValue(item.argName), getSafeValue(item.longArgName),
                 getSafeValue(item.format), getSafeValue(item.value));
 
         if (StringUtils.isNoneBlank(item.header))

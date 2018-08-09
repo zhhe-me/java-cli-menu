@@ -17,7 +17,6 @@ package me.zhhe.cli.menu;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
@@ -31,9 +30,9 @@ public class MenuItemBuilder {
     private final MenuBuilder menuBuilder;
 
     final MenuContext context;
-    String argument;
+    String argName;
     String argValue;
-    String alias;
+    String longArgName;
     String format;
     String header;
     Supplier<?> value;
@@ -45,19 +44,22 @@ public class MenuItemBuilder {
         this.context = context;
     }
 
-    public MenuItemBuilder argument(final String argument) {
-        this.argument = argument;
+    /** argName name which doesn't start with any '-'. */
+    public MenuItemBuilder argName(final String argument) {
+        this.argName = argument;
         return this;
     }
 
-    public MenuItemBuilder argument(final String argument, final String argValue) {
-        this.argument = argument;
+    /** argName name and it's value from command. Argument name doesn't start with any '-'. */
+    public MenuItemBuilder argName(final String argument, final String argValue) {
+        this.argName = argument;
         this.argValue = argValue;
         return this;
     }
 
-    public MenuItemBuilder alias(final String alias) {
-        this.alias = alias;
+    /** long argName name which doesn't start with any '-'. */
+    public MenuItemBuilder longArgName(final String longArgName) {
+        this.longArgName = longArgName;
         return this;
     }
 

@@ -14,7 +14,17 @@
 
 package me.zhhe.cli.menu;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +40,7 @@ public class MenuBuilder {
     private final Map<MenuItem, String[]> failedChecks = new HashMap<>();
 
     private final MenuContext context;
+    private String[] args;
 
     /** default builder for CLI. */
     public static MenuBuilder defaultBuilder() {
@@ -38,6 +49,12 @@ public class MenuBuilder {
 
     public MenuBuilder(final MenuContext context) {
         this.context = context;
+    }
+
+    /** inject arguments from command. Must be called before injecting any menu item. */
+    public MenuBuilder args(final String... args) {
+        this.args = Arrays.copyOf(args, args.length);
+        return this;
     }
 
     /** set menu's title. */
@@ -61,7 +78,49 @@ public class MenuBuilder {
 
     /** build {@link Menu} instance. */
     public Menu build() {
+        if (items.isEmpty())
+            throw new IllegalStateException("No menu item.");
+
+        injectArgumentToItems();
+
         return new Menu(context, title, items, failedChecks);
+    }
+
+    private void injectArgumentToItems() {
+        if (ArrayUtils.isEmpty(args))
+            return;
+
+        final Options options = new Options();
+        final Map<Option, MenuItem> itemsByOption = new HashMap<>();
+        for (final MenuItem item : items) {
+            final Option.Builder builder = Option.builder(item.argName).desc(item.header);
+            if (StringUtils.isNotBlank(item.longArgName))
+                builder.longOpt(item.longArgName);
+            final Option option = builder.build();
+            options.addOption(option);
+            itemsByOption.put(option, item);
+        }
+
+        CommandLine cmd = null;
+        try {
+            cmd = new DefaultParser().parse(options, args);
+        } catch (ParseException e) {
+            throw new RuntimeException("parse arguments failed.", e);
+        }
+
+        final Option[] parsedOptions = cmd.getOptions();
+        for (int i = 0; i < parsedOptions.length; i++) {
+            final String argValue = cmd.getArgs()[i];
+            final MenuItem item = itemsByOption.get(parsedOptions[i]);
+            if (StringUtils.isNotEmpty(argValue)) {
+                try {
+                    item.execute(argValue);
+                } catch (IllegalArgumentException e) {
+                    logFailedCheck(item, new String[]{argValue, e.getMessage()});
+                }
+            }
+        }
+
     }
 
 }

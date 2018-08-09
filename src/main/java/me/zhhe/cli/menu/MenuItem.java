@@ -24,8 +24,8 @@ import java.util.function.Supplier;
 class MenuItem {
 
     final MenuContext context;
-    final String argument;
-    final String alias;
+    final String argName;
+    final String longArgName;
     final String format;
     final String header;
     final Supplier<?> value;
@@ -34,8 +34,8 @@ class MenuItem {
 
     MenuItem(final MenuItemBuilder builder) {
         this.context = builder.context;
-        this.argument = builder.argument;
-        this.alias = builder.alias;
+        this.argName = builder.argName;
+        this.longArgName = builder.longArgName;
         this.format = builder.format;
         this.value = builder.value;
         this.header = builder.header;

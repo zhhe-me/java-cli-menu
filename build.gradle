@@ -13,6 +13,7 @@ targetCompatibility = 1.8
 dependencies {
     implementation 'com.google.guava:guava:23.0'
     implementation 'org.apache.commons:commons-lang3:3.7'
+    implementation 'commons-cli:commons-cli:1.4'
 
     testImplementation 'junit:junit:4.12'
 }

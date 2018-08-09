@@ -27,24 +27,28 @@ class CliMenuSample {
     public static void main(final String... args) {
         final CliMenuSample sample = new CliMenuSample();
 
-        final MenuBuilder builder = MenuBuilder.defaultBuilder();
-        builder
-                .menuTitle("Set Antlr parameters")
-                .item()
-                    .argument("--grammar", "it's an invalid value").alias("-g").format("Grammar")
-                    .value(() -> sample.grammar)
-                    .header("specify grammar name")
-                    .description(()->"It should be same with file name of your .g4")
-                    .inputChecker(sample::setGrammar)
-                    .done()
-                .item()
-                    .argument("--startRule").alias("-r")
-                    .value(() -> sample.startRule)
-                    .header("start rule name. \"token\" is a special value.")
-                    .inputChecker(sample::setStartRule)
-                    .done()
-                .build()
-                .render();
+        final String[] mockedArgs = {"-g", "Invalid_value", "--startRule", "token"};
+
+        MenuBuilder
+            .defaultBuilder()
+            .args(mockedArgs)
+            .menuTitle("Set Antlr parameters")
+            .item()
+                .argName("g")
+                .longArgName("grammar").format("Grammar")
+                .value(() -> sample.grammar)
+                .header("specify grammar name")
+                .description(()->"It should be same with file name of your .g4")
+                .inputChecker(sample::setGrammar)
+                .done()
+            .item()
+                .argName("r").longArgName("startRule")
+                .value(() -> sample.startRule)
+                .header("start rule name. \"token\" is a special value.")
+                .inputChecker(sample::setStartRule)
+                .done()
+            .build()
+            .render();
 
         System.out.println("\nBack to main, let's continue.");
     }
