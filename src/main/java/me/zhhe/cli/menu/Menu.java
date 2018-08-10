@@ -32,18 +32,15 @@ import javax.annotation.Nonnull;
 public class Menu {
 
     private final MenuContext context;
-    private final String title;
     private final List<MenuItem> items;
     private final Map<MenuItem, String[]> failedChekcs;
 
-    Menu(@Nonnull final MenuContext context, @Nonnull final String title,
+    Menu(@Nonnull final MenuContext context,
          @Nonnull final List<MenuItem> items, @Nonnull final Map<MenuItem, String[]> failedChekcs) {
         Preconditions.checkNotNull(context, "context");
-        Preconditions.checkArgument(StringUtils.isNotBlank(title), "title must have valid value.");
         Preconditions.checkArgument(items!=null && !items.isEmpty(), "at lease 1 items");
 
         this.context = context;
-        this.title = title.trim();
         this.items = Collections.unmodifiableList(items);
         this.failedChekcs = failedChekcs;
     }
@@ -61,7 +58,7 @@ public class Menu {
     }
 
     private void renderMenu() {
-        context.getOutputWriter().printMainMenu(title, items);
+        context.getOutputWriter().printMainMenu(items);
 
         context.getOutputWriter().printAttachedMenuItem("R): refresh menu;  X): exit");
     }

@@ -26,7 +26,7 @@ public interface OutputWriter extends Closeable {
 
     void printFailedChecks(Map<MenuItem, String[]> faileChecks);
 
-    void printMainMenu(String title, List<MenuItem> items);
+    void printMainMenu(List<MenuItem> items);
 
     void printAttachedMenuItem(String msg);
 

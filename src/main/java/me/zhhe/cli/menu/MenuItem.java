@@ -21,7 +21,7 @@ import java.util.function.Supplier;
  * @author zhhe.me@gmail.com.
  * @since 7/8/2018
  */
-class MenuItem {
+public class MenuItem {
 
     final MenuContext context;
     final String argName;
@@ -43,15 +43,7 @@ class MenuItem {
         this.inputChecker = builder.inputChecker;
     }
 
-    String getTitle() {
-        return description.get();
-    }
-
     void execute(final String input) {
         inputChecker.accept(input);
-    }
-
-    State getState() {
-        return State.CONTINUE;
     }
 }

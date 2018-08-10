@@ -48,7 +48,7 @@ class CliWriter implements OutputWriter {
     }
 
     @Override
-    public void printMainMenu(String title, List<MenuItem> items) {
+    public void printMainMenu(List<MenuItem> items) {
 //        final String formattedTitle = String.format(" *    %s   * ", title);
 //        final String _s = StringUtils.repeat('=', formattedTitle.length());
 //        System.out.format("%n%s%n%s%n%s%n%n", _s, formattedTitle, _s);

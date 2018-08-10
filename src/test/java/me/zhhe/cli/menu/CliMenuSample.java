@@ -27,12 +27,11 @@ class CliMenuSample {
     public static void main(final String... args) {
         final CliMenuSample sample = new CliMenuSample();
 
+        // mock arguments
         final String[] mockedArgs = {"-g", "Invalid_value", "--startRule", "token"};
 
-        MenuBuilder
-            .defaultBuilder()
-            .args(mockedArgs)
-            .menuTitle("Set Antlr parameters")
+        final BasicMenuBuilder builder = new BasicMenuBuilder();
+        builder
             .item()
                 .argName("g")
                 .longArgName("grammar").format("Grammar")
@@ -47,7 +46,7 @@ class CliMenuSample {
                 .header("start rule name. \"token\" is a special value.")
                 .inputChecker(sample::setStartRule)
                 .done()
-            .build()
+            .build(mockedArgs)
             .render();
 
         System.out.println("\nBack to main, let's continue.");

@@ -14,21 +14,28 @@
 
 package me.zhhe.cli.menu;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
+ * A builder for {@link Menu}.
  * @author zhhe.me@gmail.com.
  * @since 7/8/2018
  */
-class TerminatedMenuItem extends MenuItem {
+public class BasicMenuBuilder extends MenuBuilder {
 
-    TerminatedMenuItem(MenuItemBuilder builder) {
-        super(builder);
-    }
-
-    @Override
-    State getState() {
-        return State.TERMINATED;
+    public MenuItemBuilder item() {
+        return new MenuItemBuilder(this, context);
     }
 }

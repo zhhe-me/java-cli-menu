@@ -24,66 +24,43 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * A builder for {@link Menu}.
  * @author zhhe.me@gmail.com.
- * @since 7/8/2018
+ * @since 10/8/2018
  */
-public class MenuBuilder {
+public abstract class MenuBuilder {
+    private List<MenuBuilder> chainedBuilders = new ArrayList<>();
     private final List<MenuItem> items = new ArrayList<>();
-    private String title;
     private final Map<MenuItem, String[]> failedChecks = new HashMap<>();
 
-    private final MenuContext context;
+    protected final MenuContext context = new MenuContext(new CliReader(), new CliWriter());
     private String[] args;
 
-    /** default builder for CLI. */
-    public static MenuBuilder defaultBuilder() {
-        return new MenuBuilder(new MenuContext(new CliReader(), new CliWriter()));
-    }
 
-    public MenuBuilder(final MenuContext context) {
-        this.context = context;
-    }
-
-    /** inject arguments from command. Must be called before injecting any menu item. */
-    public MenuBuilder args(final String... args) {
-        this.args = Arrays.copyOf(args, args.length);
+    public MenuBuilder with(MenuBuilder chainedBuilder) {
+        chainedBuilders.add(chainedBuilder);
         return this;
     }
 
-    /** set menu's title. */
-    public MenuBuilder menuTitle(final String title) {
-        this.title = title;
-        return this;
-    }
-
-    public MenuItemBuilder item() {
-        return new MenuItemBuilder(this, context);
-    }
-
-    MenuBuilder item(final MenuItem item) {
+    public MenuBuilder item(MenuItem item) {
         items.add(item);
         return this;
     }
 
-    void logFailedCheck(final MenuItem item, final String[] msg) {
-        failedChecks.put(item, msg);
-    }
-
     /** build {@link Menu} instance. */
-    public Menu build() {
+    public Menu build(String... args) {
         if (items.isEmpty())
             throw new IllegalStateException("No menu item.");
 
+        this.args = Arrays.copyOf(args, args.length);
+
         injectArgumentToItems();
 
-        return new Menu(context, title, items, failedChecks);
+        return new Menu(context,items, failedChecks);
     }
 
     private void injectArgumentToItems() {
@@ -116,11 +93,10 @@ public class MenuBuilder {
                 try {
                     item.execute(argValue);
                 } catch (IllegalArgumentException e) {
-                    logFailedCheck(item, new String[]{argValue, e.getMessage()});
+                    failedChecks.put(item, new String[]{argValue, e.getMessage()});
                 }
             }
         }
 
     }
-
 }

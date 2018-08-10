@@ -14,8 +14,6 @@
 
 package me.zhhe.cli.menu;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -27,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public class MenuItemBuilder {
 
-    private final MenuBuilder menuBuilder;
+    private final BasicMenuBuilder menuBuilder;
 
     final MenuContext context;
     String argName;
@@ -39,7 +37,7 @@ public class MenuItemBuilder {
     Supplier<String> description;
     Consumer<String> inputChecker;
 
-    MenuItemBuilder(@Nonnull final MenuBuilder menuBuilder, @Nonnull final MenuContext context) {
+    MenuItemBuilder(@Nonnull final BasicMenuBuilder menuBuilder, @Nonnull final MenuContext context) {
         this.menuBuilder = menuBuilder;
         this.context = context;
     }
@@ -47,13 +45,6 @@ public class MenuItemBuilder {
     /** argName name which doesn't start with any '-'. */
     public MenuItemBuilder argName(final String argument) {
         this.argName = argument;
-        return this;
-    }
-
-    /** argName name and it's value from command. Argument name doesn't start with any '-'. */
-    public MenuItemBuilder argName(final String argument, final String argValue) {
-        this.argName = argument;
-        this.argValue = argValue;
         return this;
     }
 
@@ -94,17 +85,9 @@ public class MenuItemBuilder {
         return this;
     }
 
-    public MenuBuilder done() {
+    public BasicMenuBuilder done() {
         final MenuItem item = new MenuItem(this);
         menuBuilder.item(item);
-
-        if (StringUtils.isNotBlank(argValue)) {
-            try {
-                item.execute(argValue);
-            } catch (IllegalArgumentException e) {
-                menuBuilder.logFailedCheck(item, new String[]{argValue, e.getMessage()});
-            }
-        }
 
         return menuBuilder;
     }
