@@ -4,7 +4,7 @@ plugins {
     id 'idea'
 }
 
-group = 'me.zhhe.cli'
+group = 'cli-menu'
 version = '0.1'
 
 sourceCompatibility = 1.8
@@ -16,6 +16,7 @@ dependencies {
     implementation 'commons-cli:commons-cli:1.4'
 
     testImplementation 'junit:junit:4.12'
+    testImplementation 'org.assertj:assertj-core:3.10.0'
 }
 
 repositories {
