@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import me.zhhe.cli.menu.util.ExceptionUtil;
+
 /**
  * A parser to distill bean's pairs of field + setter.
  * A field having its public setter with one String type parameter will be selected.
@@ -52,13 +54,27 @@ public class BeanParser {
             final String name = field.getName();
             final Method m = validSetters.get(formatSetterName(name));
             if (m!=null)
-                items.add(new BeanItem(field.getName(), s -> {
-                    try {
-                        m.invoke(bean, s);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
-                }));
+                field.setAccessible(true);
+                items.add(new BeanItem(field.getName(),
+                        () -> {
+                            try {
+                                final Object o = field.get(bean);
+                                return o == null ? null : o.toString();
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                                return null;
+                            }
+                        },
+                        s -> {
+                            try {
+                                m.invoke(bean, s);
+                            } catch (IllegalAccessException | InvocationTargetException e) {
+                                final Throwable rootException = ExceptionUtil.getInstance().getRootException(e);
+                                if (rootException.getClass() == IllegalArgumentException.class)
+                                    throw IllegalArgumentException.class.cast(rootException);
+                            }
+                        }
+                ));
         });
 
         return items;

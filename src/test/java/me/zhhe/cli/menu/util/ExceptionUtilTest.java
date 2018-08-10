@@ -12,35 +12,33 @@
  * the License.
  */
 
-package me.zhhe.cli.menu.bean;
+package me.zhhe.cli.menu.util;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import org.junit.Before;
+import org.junit.Test;
+
+import me.zhhe.cli.menu.util.ExceptionUtil;
+
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * @author zhhe.me@gmail.com.
  * @since 10/8/2018
  */
-public class BeanItem {
-    private final String name;
-    private final Supplier<String> value;
-    private final Consumer<String> executor;
+public class ExceptionUtilTest {
+    private ExceptionUtil test;
 
-    BeanItem(String name, Supplier<String> value, Consumer<String> executor) {
-        this.name = name;
-        this.value = value;
-        this.executor = executor;
+    @Before
+    public void setUp() {
+        test = ExceptionUtil.getInstance();
     }
 
-    public String getName() {
-        return name;
-    }
+    @Test
+    public void getRootException() {
+        final IllegalAccessException rootCause = new IllegalAccessException("root msg");
+        final RuntimeException exception = new RuntimeException("outer msg", rootCause);
 
-    public Supplier<String> getValue() {
-        return value;
-    }
-
-    public Consumer<String> getExecutor() {
-        return executor;
+        final Throwable result = test.getRootException(exception);
+        assertThat(result).isSameAs(rootCause);
     }
 }

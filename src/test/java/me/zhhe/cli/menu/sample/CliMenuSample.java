@@ -12,7 +12,9 @@
  * the License.
  */
 
-package me.zhhe.cli.menu;
+package me.zhhe.cli.menu.sample;
+
+import me.zhhe.cli.menu.BasicMenuBuilder;
 
 /**
  * @author zhhe.me@gmail.com.

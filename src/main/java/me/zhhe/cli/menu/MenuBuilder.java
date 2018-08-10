@@ -33,11 +33,12 @@ import java.util.Map;
  * @since 10/8/2018
  */
 public abstract class MenuBuilder {
+    protected final MenuContext context = new MenuContext(new CliReader(), new CliWriter());
+
     private List<MenuBuilder> chainedBuilders = new ArrayList<>();
     private final List<MenuItem> items = new ArrayList<>();
     private final Map<MenuItem, String[]> failedChecks = new HashMap<>();
 
-    protected final MenuContext context = new MenuContext(new CliReader(), new CliWriter());
     private String[] args;
 
 
@@ -70,7 +71,7 @@ public abstract class MenuBuilder {
         final Options options = new Options();
         final Map<Option, MenuItem> itemsByOption = new HashMap<>();
         for (final MenuItem item : items) {
-            final Option.Builder builder = Option.builder(item.argName).desc(item.header);
+            final Option.Builder builder = Option.builder(item.argName).desc(item.header).hasArg();
             if (StringUtils.isNotBlank(item.longArgName))
                 builder.longOpt(item.longArgName);
             final Option option = builder.build();
@@ -80,15 +81,14 @@ public abstract class MenuBuilder {
 
         CommandLine cmd = null;
         try {
-            cmd = new DefaultParser().parse(options, args);
+            cmd = new DefaultParser().parse(options, args, true);
         } catch (ParseException e) {
             throw new RuntimeException("parse arguments failed.", e);
         }
 
-        final Option[] parsedOptions = cmd.getOptions();
-        for (int i = 0; i < parsedOptions.length; i++) {
-            final String argValue = cmd.getArgs()[i];
-            final MenuItem item = itemsByOption.get(parsedOptions[i]);
+        for (final Option option : cmd.getOptions()) {
+            final MenuItem item = itemsByOption.get(option);
+            final String argValue = option.getValue();
             if (StringUtils.isNotEmpty(argValue)) {
                 try {
                     item.execute(argValue);
@@ -97,6 +97,5 @@ public abstract class MenuBuilder {
                 }
             }
         }
-
     }
 }

@@ -23,7 +23,6 @@ import java.util.function.Supplier;
  */
 public class MenuItem {
 
-    final MenuContext context;
     final String argName;
     final String longArgName;
     final String format;
@@ -33,7 +32,6 @@ public class MenuItem {
     final Consumer<String> inputChecker;
 
     MenuItem(final MenuItemBuilder builder) {
-        this.context = builder.context;
         this.argName = builder.argName;
         this.longArgName = builder.longArgName;
         this.format = builder.format;

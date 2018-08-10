@@ -36,6 +36,7 @@ import java.util.Map;
 public class BasicMenuBuilder extends MenuBuilder {
 
     public MenuItemBuilder item() {
-        return new MenuItemBuilder(this, context);
+        return new MenuItemBuilder(this);
     }
+
 }

@@ -41,13 +41,15 @@ public class BeanParserTest {
         assertThat(items).extracting("name").containsOnly("firstName", "title");
 
         final String firstName = "it's first name";
-        items.stream().filter(item -> item.getName().equals("firstName"))
-                .findFirst().get().getExecutor().accept(firstName);
-        assertThat(bean.firstName).isEqualTo(firstName);
+        final BeanItem biFirstName = items.stream().filter(item -> item.getName().equals("firstName"))
+                .findFirst().get();
+        biFirstName.getExecutor().accept(firstName);
+        assertThat(bean.firstName).isEqualTo(firstName).isEqualTo(biFirstName.getValue().get());
 
         final String title = "it's my title";
-        items.stream().filter(item -> item.getName().equals("title"))
-                .findFirst().get().getExecutor().accept(title);
-        assertThat(bean.title).isEqualTo(title);
+        final BeanItem biTitle = items.stream().filter(item -> item.getName().equals("title"))
+                .findFirst().get();
+        biTitle.getExecutor().accept(title);
+        assertThat(bean.title).isEqualTo(title).isEqualTo(biTitle.getValue().get());
     }
 }

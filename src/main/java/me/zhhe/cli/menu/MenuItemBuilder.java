@@ -27,7 +27,6 @@ public class MenuItemBuilder {
 
     private final BasicMenuBuilder menuBuilder;
 
-    final MenuContext context;
     String argName;
     String argValue;
     String longArgName;
@@ -37,9 +36,8 @@ public class MenuItemBuilder {
     Supplier<String> description;
     Consumer<String> inputChecker;
 
-    MenuItemBuilder(@Nonnull final BasicMenuBuilder menuBuilder, @Nonnull final MenuContext context) {
+    MenuItemBuilder(final BasicMenuBuilder menuBuilder) {
         this.menuBuilder = menuBuilder;
-        this.context = context;
     }
 
     /** argName name which doesn't start with any '-'. */
