@@ -24,21 +24,13 @@ import javax.annotation.Nonnull;
  * @since 8/8/2018
  */
 public class MenuItemBuilder {
-
-    private final BasicMenuBuilder menuBuilder;
-
     String argName;
-    String argValue;
     String longArgName;
     String format;
     String header;
     Supplier<?> value;
-    Supplier<String> description;
+    String description;
     Consumer<String> inputChecker;
-
-    MenuItemBuilder(final BasicMenuBuilder menuBuilder) {
-        this.menuBuilder = menuBuilder;
-    }
 
     /** argName name which doesn't start with any '-'. */
     public MenuItemBuilder argName(final String argument) {
@@ -57,11 +49,6 @@ public class MenuItemBuilder {
         return this;
     }
 
-    public MenuItemBuilder value(String value) {
-        this.value = () -> value;
-        return this;
-    }
-
     public MenuItemBuilder value(Supplier<?> value) {
         this.value = value;
         return this;
@@ -72,7 +59,7 @@ public class MenuItemBuilder {
         return this;
     }
 
-    public MenuItemBuilder description(final Supplier<String> description) {
+    public MenuItemBuilder description(final String description) {
         this.description = description;
         return this;
     }
@@ -83,10 +70,7 @@ public class MenuItemBuilder {
         return this;
     }
 
-    public BasicMenuBuilder done() {
-        final MenuItem item = new MenuItem(this);
-        menuBuilder.item(item);
-
-        return menuBuilder;
+    public MenuItem build() {
+        return new MenuItem(this);
     }
 }

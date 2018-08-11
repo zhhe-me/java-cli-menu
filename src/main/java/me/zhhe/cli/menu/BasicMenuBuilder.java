@@ -27,6 +27,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * A builder for {@link Menu}.
@@ -35,8 +37,22 @@ import java.util.Map;
  */
 public class BasicMenuBuilder extends MenuBuilder {
 
-    public MenuItemBuilder item() {
-        return new MenuItemBuilder(this);
+    public BasicMenuBuilder item(final String arg, final String desc,
+                                 final Supplier<String> value, final Consumer<String> executor) {
+        final MenuItem item = new MenuItemBuilder().argName(arg)
+                .value(value).inputChecker(executor).description(desc)
+                .build();
+        item(item);
+        return this;
+    }
+
+    public BasicMenuBuilder item(final String arg, final String longArg, final String desc,
+                                 final Supplier<String> value, final Consumer<String> executor) {
+        final MenuItem item = new MenuItemBuilder().argName(arg).longArgName(longArg)
+                .value(value).inputChecker(executor).description(desc)
+                .build();
+        item(item);
+        return this;
     }
 
 }

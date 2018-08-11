@@ -15,39 +15,42 @@
 package me.zhhe.cli.menu.sample;
 
 import me.zhhe.cli.menu.BasicMenuBuilder;
+import me.zhhe.cli.menu.MenuItemBuilder;
 
 /**
  * @author zhhe.me@gmail.com.
  * @since 7/8/2018
  */
-class CliMenuSample {
+class BasicBuildSample {
 
     private String grammar;
 
     private String startRule;
 
     public static void main(final String... args) {
-        final CliMenuSample sample = new CliMenuSample();
+        final BasicBuildSample sample = new BasicBuildSample();
 
         // mock arguments
         final String[] mockedArgs = {"-g", "Invalid_value", "--startRule", "token"};
 
         final BasicMenuBuilder builder = new BasicMenuBuilder();
         builder
-            .item()
-                .argName("g")
-                .longArgName("grammar").format("Grammar")
-                .value(() -> sample.grammar)
-                .header("specify grammar name")
-                .description(()->"It should be same with file name of your .g4")
-                .inputChecker(sample::setGrammar)
-                .done()
-            .item()
-                .argName("r").longArgName("startRule")
-                .value(() -> sample.startRule)
-                .header("start rule name. \"token\" is a special value.")
-                .inputChecker(sample::setStartRule)
-                .done()
+            .item(new MenuItemBuilder()
+                    .argName("g")
+                    .longArgName("grammar").format("Grammar")
+                    .value(() -> sample.grammar)
+                    .header("specify grammar name")
+                    .description("It should be same with file name of your .g4")
+                    .inputChecker(sample::setGrammar)
+                    .build()
+            )
+            .item(new MenuItemBuilder()
+                    .argName("r").longArgName("startRule")
+                    .value(() -> sample.startRule)
+                    .header("start rule name. \"token\" is a special value.")
+                    .inputChecker(sample::setStartRule)
+                    .build()
+            )
             .build(mockedArgs)
             .render();
 

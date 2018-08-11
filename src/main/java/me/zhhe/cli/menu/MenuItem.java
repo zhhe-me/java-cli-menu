@@ -28,7 +28,7 @@ public class MenuItem {
     final String format;
     final String header;
     final Supplier<?> value;
-    final Supplier<String> description;
+    final String description;
     final Consumer<String> inputChecker;
 
     MenuItem(final MenuItemBuilder builder) {

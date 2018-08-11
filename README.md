@@ -1,7 +1,7 @@
 # java-cli-menu
-An interactive menu for Java CLI.
+An clean, interactive command line parser/menu for Java CLI.
 
-Idealy, a Java command app can be trigger by ```java -cp <class> <params>```. But sometimes, a menu based configuration is useful and convinient. The interaction looks like:
+Idealy, a Java CLI based app can be trigger by ```java -cp <class> <params>```. But sometimes, a menu based configuration is useful and convinient. The interaction looks like:
 
 ```shell 1) --grammar,-g Grammar [Csv]           specify grammar name            It should be same with file name of your .g4   2) --startRule,-r  [token]           start rule name. &quot;token&quot; is a special value.   --  R): refresh menu;  X): exit   Your input [# value]: 1 some wrong values   &gt;! Bad
  Wrong arguments:
@@ -44,7 +44,12 @@ Your input [# value]: x
 Back to main, let's continue.
 ```
 
-Just try to run [CliMenuSample.java](https://github.com/zhhe-me/java-cli-menu/blob/master/src/test/java/me/zhhe/cli/menu/CliMenuSample.java) with input above.
+Just try to run 
+
+- [BasicBuildSample.java](https://github.com/zhhe-me/java-cli-menu/blob/master/src/test/java/me/zhhe/cli/menu/sample/BasicBuildSample.java) 
+- [BeanBuildSample.java](https://github.com/zhhe-me/java-cli-menu/blob/master/src/test/java/me/zhhe/cli/menu/sample/BeanBuildSample.java) 
+
+with input above.
 
 This project is on the way and changes will happen any time without notification until it gets GA.
 
