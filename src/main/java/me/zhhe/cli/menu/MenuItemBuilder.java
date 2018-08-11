@@ -26,8 +26,6 @@ import javax.annotation.Nonnull;
 public class MenuItemBuilder {
     String argName;
     String longArgName;
-    String format;
-    String header;
     Supplier<?> value;
     String description;
     Consumer<String> inputChecker;
@@ -44,18 +42,8 @@ public class MenuItemBuilder {
         return this;
     }
 
-    public MenuItemBuilder format(final String format) {
-        this.format = format;
-        return this;
-    }
-
     public MenuItemBuilder value(Supplier<?> value) {
         this.value = value;
-        return this;
-    }
-
-    public MenuItemBuilder header(final String header) {
-        this.header = header;
         return this;
     }
 

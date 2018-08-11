@@ -54,20 +54,17 @@ class CliWriter implements OutputWriter {
 //        System.out.format("%n%s%n%s%n%s%n%n", _s, formattedTitle, _s);
 
         int[] idx = {1};
-        items.stream().forEach(e -> printMeneItem(idx[0]++, e));
+        items.stream().forEach(item -> printMeneItem(idx[0]++, item));
     }
 
     private void printMeneItem(final int no, final MenuItem item) {
-        System.out.format("%n%s%d) -%s,--%s %s [%s]%n",
+        System.out.format("%s%d) -%s,--%s [%s]",
                 START, no, getSafeValue(item.argName), getSafeValue(item.longArgName),
-                getSafeValue(item.format), getSafeValue(item.value));
-
-        if (StringUtils.isNoneBlank(item.header))
-            System.out.format("%s%s%n", START_PARAM_TEXT, item.header);
+                getSafeValue(item.value));
 
         final String desc = getSafeValue(item.description);
         if (StringUtils.isNotBlank(desc))
-            System.out.format("%n%s%s%n", START_PARAM_TEXT, desc);
+            System.out.format(": %s%n", desc);
     }
 
     private String getSafeValue(final String value) {

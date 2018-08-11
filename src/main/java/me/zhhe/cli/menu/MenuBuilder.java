@@ -14,6 +14,8 @@
 
 package me.zhhe.cli.menu;
 
+import com.google.common.base.MoreObjects;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
@@ -24,36 +26,104 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import me.zhhe.cli.menu.util.Logger;
 
 /**
  * @author zhhe.me@gmail.com.
  * @since 10/8/2018
  */
 public abstract class MenuBuilder {
+    protected final Logger logger = Logger.getInstance();
     protected final MenuContext context = new MenuContext(new CliReader(), new CliWriter());
 
-    private List<MenuBuilder> chainedBuilders = new ArrayList<>();
     private final List<MenuItem> items = new ArrayList<>();
     private final Map<MenuItem, String[]> failedChecks = new HashMap<>();
 
     private String[] args;
 
+    private final Map<String, MenuItem> itemsByArg = new HashMap<>();
+    private final Map<String, MenuItem> itemsByLongArg = new HashMap<>();
 
-    public MenuBuilder with(MenuBuilder chainedBuilder) {
-        chainedBuilders.add(chainedBuilder);
+
+    /**
+     * get assistant from other builder. If same arg's item alread exists,
+     * the one in assistant builder will be merged into current one. Current one will win if conflict.
+     */
+    public final MenuBuilder with(MenuBuilder builder) {
+        final Collection<MenuItem> augItems = MoreObjects
+                .firstNonNull(builder.items, Collections.emptyList());
+        for (final MenuItem item : augItems) {
+            final String argName = item.argName;
+            if (itemsByArg.containsKey(argName)) {
+                copy(item, itemsByArg.get(argName));
+                continue;
+            }
+            final String longArgName = item.longArgName;
+            if (itemsByLongArg.containsKey(longArgName)) {
+                copy(item, itemsByLongArg.get(longArgName));
+                continue;
+            }
+            item(item);
+        }
+
         return this;
     }
 
-    public MenuBuilder item(MenuItem item) {
+    private void copy(final MenuItem from, final MenuItem to) {
+        if (StringUtils.isBlank(to.argName) && StringUtils.isNotBlank(from.argName)) {
+            to.argName = from.argName;
+        }
+        if (StringUtils.isBlank(to.longArgName) && StringUtils.isNotBlank(from.longArgName)) {
+            to.longArgName = from.longArgName;
+        }
+        if (StringUtils.isBlank(to.description) && StringUtils.isNotBlank(from.description)) {
+            to.description = from.description;
+        }
+        if (to.value == null && from.value != null) {
+            to.value = from.value;
+        }
+        if (to.inputChecker == null && from.inputChecker != null) {
+            to.inputChecker = from.inputChecker;
+        }
+    }
+
+    public final MenuBuilder item(MenuItem item) {
+        final String argName = item.argName;
+        if (itemsByArg.containsKey(argName)) {
+            logger.warning(String.format("duplicated arg: %s", argName));
+            return this;
+        }
+        final String longArgName = item.longArgName;
+        if (itemsByLongArg.containsKey(longArgName)) {
+            logger.warning(String.format("duplicated arg: %s", longArgName));
+            return this;
+        }
+        if (StringUtils.isBlank(argName) && StringUtils.isBlank(longArgName))
+            throw new IllegalArgumentException("arg or longArg must be supplied.");
+
         items.add(item);
+        if (StringUtils.isNotBlank(argName)) {
+            itemsByArg.put(argName, item);
+        }
+        if (StringUtils.isNotBlank(longArgName)) {
+            itemsByLongArg.put(longArgName, item);
+        }
         return this;
+    }
+
+    /** onlu for unit test. */
+    Collection<? extends MenuItem> getItems() {
+        return items;
     }
 
     /** build {@link Menu} instance. */
-    public Menu build(String... args) {
+    public final Menu build(String... args) {
         if (items.isEmpty())
             throw new IllegalStateException("No menu item.");
 
@@ -71,7 +141,7 @@ public abstract class MenuBuilder {
         final Options options = new Options();
         final Map<Option, MenuItem> itemsByOption = new HashMap<>();
         for (final MenuItem item : items) {
-            final Option.Builder builder = Option.builder(item.argName).desc(item.header).hasArg();
+            final Option.Builder builder = Option.builder(item.argName).desc(item.description).hasArg();
             if (StringUtils.isNotBlank(item.longArgName))
                 builder.longOpt(item.longArgName);
             final Option option = builder.build();

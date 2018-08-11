@@ -37,16 +37,20 @@ import java.util.function.Supplier;
  */
 public class BasicMenuBuilder extends MenuBuilder {
 
-    public BasicMenuBuilder item(final String arg, final String desc,
-                                 final Supplier<String> value, final Consumer<String> executor) {
-        final MenuItem item = new MenuItemBuilder().argName(arg)
-                .value(value).inputChecker(executor).description(desc)
-                .build();
-        item(item);
-        return this;
+    public final BasicMenuBuilder item(final String arg, final String desc) {
+        return item(arg, null, desc);
     }
 
-    public BasicMenuBuilder item(final String arg, final String longArg, final String desc,
+    public final BasicMenuBuilder item(final String arg, final String longArg, final String desc) {
+        return item(arg, longArg, desc, null, null);
+    }
+
+    public final BasicMenuBuilder item(final String arg, final String desc,
+                                 final Supplier<String> value, final Consumer<String> executor) {
+        return item(arg, null, desc, value, executor);
+    }
+
+    public final BasicMenuBuilder item(final String arg, final String longArg, final String desc,
                                  final Supplier<String> value, final Consumer<String> executor) {
         final MenuItem item = new MenuItemBuilder().argName(arg).longArgName(longArg)
                 .value(value).inputChecker(executor).description(desc)

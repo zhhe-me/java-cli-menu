@@ -53,7 +53,7 @@ public class BeanParser {
         Arrays.stream(fields).forEach(field -> {
             final String name = field.getName();
             final Method m = validSetters.get(formatSetterName(name));
-            if (m!=null)
+            if (m!=null) {
                 field.setAccessible(true);
                 items.add(new BeanItem(field.getName(),
                         () -> {
@@ -75,6 +75,7 @@ public class BeanParser {
                             }
                         }
                 ));
+            }
         });
 
         return items;

@@ -27,7 +27,7 @@ import me.zhhe.cli.menu.bean.BeanParser;
  */
 public class BeanMenuBuilder extends MenuBuilder {
 
-    public BeanMenuBuilder bean(Object bean) {
+    public final BeanMenuBuilder bean(Object bean) {
         final Collection<? extends BeanItem> beanItems = BeanParser.getInstance().parse(bean);
         for (final BeanItem beanItem : beanItems) {
             final MenuItemBuilder itemBuilder = new MenuItemBuilder()

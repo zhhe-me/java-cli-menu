@@ -14,6 +14,8 @@
 
 package me.zhhe.cli.menu;
 
+import com.google.common.base.MoreObjects;
+
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -23,21 +25,17 @@ import java.util.function.Supplier;
  */
 public class MenuItem {
 
-    final String argName;
-    final String longArgName;
-    final String format;
-    final String header;
-    final Supplier<?> value;
-    final String description;
-    final Consumer<String> inputChecker;
+    String argName;
+    String longArgName;
+    String description;
+    Supplier<?> value;
+    Consumer<String> inputChecker;
 
     MenuItem(final MenuItemBuilder builder) {
-        this.argName = builder.argName;
-        this.longArgName = builder.longArgName;
-        this.format = builder.format;
+        this.argName = MoreObjects.firstNonNull(builder.argName, "").trim();
+        this.longArgName = MoreObjects.firstNonNull(builder.longArgName, "").trim();
+        this.description = MoreObjects.firstNonNull(builder.description, "").trim();
         this.value = builder.value;
-        this.header = builder.header;
-        this.description = builder.description;
         this.inputChecker = builder.inputChecker;
     }
 

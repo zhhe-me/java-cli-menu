@@ -21,14 +21,13 @@ import me.zhhe.cli.menu.MenuItemBuilder;
  * @author zhhe.me@gmail.com.
  * @since 7/8/2018
  */
-class BasicBuildSample {
+class BasicBuilderSample {
 
     private String grammar;
-
     private String startRule;
 
     public static void main(final String... args) {
-        final BasicBuildSample sample = new BasicBuildSample();
+        final BasicBuilderSample sample = new BasicBuilderSample();
 
         // mock arguments
         final String[] mockedArgs = {"-g", "Invalid_value", "--startRule", "token"};
@@ -37,9 +36,8 @@ class BasicBuildSample {
         builder
             .item(new MenuItemBuilder()
                     .argName("g")
-                    .longArgName("grammar").format("Grammar")
+                    .longArgName("grammar")
                     .value(() -> sample.grammar)
-                    .header("specify grammar name")
                     .description("It should be same with file name of your .g4")
                     .inputChecker(sample::setGrammar)
                     .build()
@@ -47,7 +45,6 @@ class BasicBuildSample {
             .item(new MenuItemBuilder()
                     .argName("r").longArgName("startRule")
                     .value(() -> sample.startRule)
-                    .header("start rule name. \"token\" is a special value.")
                     .inputChecker(sample::setStartRule)
                     .build()
             )
