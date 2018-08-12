@@ -12,38 +12,20 @@
  * the License.
  */
 
-package me.zhhe.cli.menu.bean;
+package me.zhhe.cli.menu;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author zhhe.me@gmail.com.
- * @since 10/8/2018
+ * @since 12/8/2018
  */
-class MyBean {
-
-    String title;
-    String firstName;
-    String lastName;
-    String displayName;
-    String street;
-    int age;
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
-    }
-
-    void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setDisplayName(String displayName, String anotherParam) {
-        this.displayName = displayName;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface Setter {
+    /** linked field. */
+    String value();
 }

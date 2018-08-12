@@ -14,6 +14,7 @@
 
 package me.zhhe.cli.menu;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.MoreObjects;
 
 import org.apache.commons.cli.CommandLine;
@@ -137,6 +138,8 @@ public abstract class MenuBuilder {
     private void injectArgumentToItems() {
         if (ArrayUtils.isEmpty(args))
             return;
+
+        logger.info(String.format("args: %s", Joiner.on(' ').join(args)));
 
         final Options options = new Options();
         final Map<Option, MenuItem> itemsByOption = new HashMap<>();

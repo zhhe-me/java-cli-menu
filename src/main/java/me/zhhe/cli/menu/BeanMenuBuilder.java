@@ -27,11 +27,13 @@ import me.zhhe.cli.menu.bean.BeanParser;
  */
 public class BeanMenuBuilder extends MenuBuilder {
 
-    public final BeanMenuBuilder bean(Object bean) {
+    public final BeanMenuBuilder bean(final Object bean) {
         final Collection<? extends BeanItem> beanItems = BeanParser.getInstance().parse(bean);
         for (final BeanItem beanItem : beanItems) {
             final MenuItemBuilder itemBuilder = new MenuItemBuilder()
-                    .longArgName(beanItem.getName())
+                    .argName(beanItem.getArgName())
+                    .longArgName(beanItem.getLongArgName())
+                    .description(beanItem.getDescription())
                     .value(beanItem.getValue())
                     .inputChecker(beanItem.getExecutor());
             item(itemBuilder.build());

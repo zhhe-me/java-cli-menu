@@ -19,15 +19,17 @@ import com.google.common.base.MoreObjects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author zhhe.me@gmail.com.
  * @since 7/8/2018
  */
 public class MenuItem {
 
-    String argName;
-    String longArgName;
-    String description;
+    @Nonnull String argName;
+    @Nonnull String longArgName;
+    @Nonnull String description;
     Supplier<?> value;
     Consumer<String> inputChecker;
 

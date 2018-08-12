@@ -29,6 +29,14 @@ public class Logger {
         return DEFAULT;
     }
 
+    public void debug(final String msg) {
+        System.out.format("DEBUG %s%n", msg);
+    }
+
+    public void info(final String msg) {
+        System.out.format("INFO %s%n", msg);
+    }
+
     public void warning(final String msg) {
         System.out.format("WARN %s%n", msg);
     }

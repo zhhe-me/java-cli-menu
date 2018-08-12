@@ -14,26 +14,43 @@
 
 package me.zhhe.cli.menu.bean;
 
+import com.google.common.base.MoreObjects;
+
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author zhhe.me@gmail.com.
  * @since 10/8/2018
  */
 public class BeanItem {
-    private final String name;
+    @Nonnull private final String argName;
+    @Nonnull private final String longArgName;
+    @Nonnull private final String description;
     private final Supplier<String> value;
     private final Consumer<String> executor;
 
-    BeanItem(String name, Supplier<String> value, Consumer<String> executor) {
-        this.name = name;
+    BeanItem(String argName, String longArgName, String description,
+             Supplier<String> value, Consumer<String> executor) {
+        this.argName = MoreObjects.firstNonNull(argName, "").trim();
+        this.longArgName = MoreObjects.firstNonNull(longArgName, "").trim();
+        this.description = MoreObjects.firstNonNull(description, "").trim();
         this.value = value;
         this.executor = executor;
     }
 
-    public String getName() {
-        return name;
+    public String getLongArgName() {
+        return longArgName;
+    }
+
+    public String getArgName() {
+        return argName;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public Supplier<String> getValue() {

@@ -19,6 +19,8 @@ import org.junit.Test;
 
 import java.util.Collection;
 
+import me.zhhe.cli.menu.bean.sub.MyBean;
+
 import static org.assertj.core.api.Assertions.*;
 
 /**
@@ -38,18 +40,23 @@ public class BeanParserTest {
     public void parse() {
         final MyBean bean = new MyBean();
         final Collection<? extends BeanItem> items = test.parse(bean);
-        assertThat(items).extracting("name").containsOnly("firstName", "title");
+        assertThat(items).hasSize(2)
+                .extracting("argName", "longArgName", "description")
+                .containsOnly(
+                        tuple("", "firstName", "First name"),
+                        tuple("t", "", "")
+                );
 
         final String firstName = "it's first name";
-        final BeanItem biFirstName = items.stream().filter(item -> item.getName().equals("firstName"))
+        final BeanItem biFirstName = items.stream().filter(item -> item.getLongArgName().equals("firstName"))
                 .findFirst().get();
         biFirstName.getExecutor().accept(firstName);
-        assertThat(bean.firstName).isEqualTo(firstName).isEqualTo(biFirstName.getValue().get());
+        assertThat(bean.getFirstName()).isEqualTo("2-" + firstName).isEqualTo(biFirstName.getValue().get());
 
         final String title = "it's my title";
-        final BeanItem biTitle = items.stream().filter(item -> item.getName().equals("title"))
+        final BeanItem biTitle = items.stream().filter(item -> item.getArgName().equals("t"))
                 .findFirst().get();
         biTitle.getExecutor().accept(title);
-        assertThat(bean.title).isEqualTo(title).isEqualTo(biTitle.getValue().get());
+        assertThat(bean.getTitle()).isEqualTo(title).isEqualTo(biTitle.getValue().get());
     }
 }

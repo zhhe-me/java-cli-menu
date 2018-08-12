@@ -64,7 +64,9 @@ class CliWriter implements OutputWriter {
 
         final String desc = getSafeValue(item.description);
         if (StringUtils.isNotBlank(desc))
-            System.out.format(": %s%n", desc);
+            System.out.format(": %s", desc);
+
+        System.out.println();
     }
 
     private String getSafeValue(final String value) {

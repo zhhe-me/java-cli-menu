@@ -14,6 +14,8 @@
 
 package me.zhhe.cli.menu.bean;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,7 +27,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
+import me.zhhe.cli.menu.Setter;
+import me.zhhe.cli.menu.Option;
 import me.zhhe.cli.menu.util.ExceptionUtil;
 
 /**
@@ -47,15 +53,40 @@ public class BeanParser {
     }
 
     public Collection<? extends BeanItem> parse(final Object bean) {
-        final Field[] fields = bean.getClass().getDeclaredFields();
-        final Map<String, Method> validSetters = extractValidSetters(bean.getClass());
+        final Class<?> clazz = bean.getClass();
+        final Field[] fields = clazz.getDeclaredFields();
+        final Method[] methods = clazz.getMethods();
+
+        final Map<String, Method> settersWithAnnotation = extractMethods(methods,
+                m -> m.isAnnotationPresent(Setter.class),
+                m -> m.getAnnotation(Setter.class).value().trim());
+        final Map<String, Method> settersViaNaming = extractMethods(methods,
+                m -> m.getName().startsWith("set"), m -> m.getName());
+
         final List<BeanItem> items = new ArrayList<>();
         Arrays.stream(fields).forEach(field -> {
-            final String name = field.getName();
-            final Method m = validSetters.get(formatSetterName(name));
-            if (m!=null) {
+            final String fieldName = field.getName();
+            final Option option = field.getAnnotation(Option.class);
+            final String argName = option!=null ? option.name() : "";
+
+            // in case of:
+            //    a) option is null
+            //    b) or both argName & longArgName is empty
+            // fieldName will be used as longArgName.
+            final String longArgName =
+                    (option == null ||
+                            (StringUtils.isBlank(option.longArgName())
+                                    && StringUtils.isBlank(option.name()))
+                    ) ? fieldName : option.longArgName();
+
+            final String description = option!=null ? option.description() : "";
+            // annotation has high priority than naming convention.
+            final Method m = settersWithAnnotation.containsKey(fieldName) ?
+                    settersWithAnnotation.get(fieldName) : settersViaNaming.get(formatSetterName(fieldName));
+
+            if (m != null) {
                 field.setAccessible(true);
-                items.add(new BeanItem(field.getName(),
+                items.add(new BeanItem(argName, longArgName, description,
                         () -> {
                             try {
                                 final Object o = field.get(bean);
@@ -81,11 +112,11 @@ public class BeanParser {
         return items;
     }
 
-    private Map<String, Method> extractValidSetters(final Class<?> clazz) {
-        final Map<String, Method> validSetters = new HashMap<>();
-        final Method[] methods = clazz.getMethods();
+    private Map<String, Method> extractMethods(final Method[] methods,
+        Predicate<Method> predict, Function<Method, String> key) {
+        final Map<String, Method> ret = new HashMap<>();
         for (final Method m : methods) {
-            if (!m.getName().startsWith("set"))
+            if (!predict.test(m))
                 continue;
 
             if (void.class != m.getReturnType())
@@ -99,10 +130,10 @@ public class BeanParser {
             if (String.class != params[0].getType())
                 continue;
 
-            validSetters.put(m.getName(), m);
+            ret.put(key.apply(m), m);
         }
 
-        return validSetters;
+        return ret;
     }
 
     private String formatSetterName(final String fieldName) {
