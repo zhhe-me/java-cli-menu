@@ -22,8 +22,21 @@ import me.zhhe.cli.menu.BeanMenuBuilder;
  */
 public class BeanBuilderSample {
 
+    // use field name as long arg name
     private String grammar;
     private String startRule;
+
+    // matched by naming convention
+    public void setGrammar(final String value) {
+        if (!"Csv".equals(value))
+            throw new IllegalArgumentException("Only 'Csv' is acceptable!");
+        grammar = value;
+    }
+
+    // matched by naming convention
+    public void setStartRule(final String value) {
+        startRule = value;
+    }
 
     public static void main(final String... args) {
         final BeanBuilderSample sample = new BeanBuilderSample();
@@ -32,18 +45,7 @@ public class BeanBuilderSample {
 
         new BeanMenuBuilder().bean(sample).build(mockedArgs).render();
 
+        // continue your business after all setting is done.
         System.out.println("\nBack to main, let's continue.");
-    }
-
-
-    public void setGrammar(final String value) {
-        if (!"Csv".equals(value))
-            throw new IllegalArgumentException("Only 'Csv' is acceptable!");
-
-        grammar = value;
-    }
-
-    public void setStartRule(final String value) {
-        startRule = value;
     }
 }

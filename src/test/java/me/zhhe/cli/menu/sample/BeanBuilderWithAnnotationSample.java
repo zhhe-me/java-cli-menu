@@ -24,6 +24,7 @@ import me.zhhe.cli.menu.Option;
  */
 public class BeanBuilderWithAnnotationSample {
 
+    // Annotation can help supply extra info, like arg name, description
     @Option(name = "g", description = "Grammar name")
     private String grammar;
 
@@ -31,25 +32,14 @@ public class BeanBuilderWithAnnotationSample {
     @Option(description = "Start rule")
     private String startRule;
 
-    public static void main(final String... args) {
-        final BeanBuilderWithAnnotationSample sample = new BeanBuilderWithAnnotationSample();
-        // mock arguments
-        final String[] mockedArgs = {"-g", "Invalid_value", "--startRule", "token"};
-
-        new BeanMenuBuilder().bean(sample).build(mockedArgs).render();
-
-        System.out.println("\nBack to main, let's continue.");
-    }
-
-
+    // matched by naming convention
     public void setGrammar(final String value) {
         if (!"Csv".equals(value))
             throw new IllegalArgumentException("Only 'Csv' is acceptable!");
-
         grammar = value;
     }
 
-
+    // ignored due to setStartRule2
     public void setStartRule(final String value) {
         startRule = value;
     }
@@ -58,5 +48,17 @@ public class BeanBuilderWithAnnotationSample {
     @Setter("startRule")
     public void setStartRule2(final String value) {
         startRule = "2-" + value;
+    }
+
+    public static void main(final String... args) {
+        final BeanBuilderWithAnnotationSample sample = new BeanBuilderWithAnnotationSample();
+        // mock arguments
+        final String[] mockedArgs = {"-g", "Invalid_value", "--startRule", "token"};
+
+        new BeanMenuBuilder().bean(sample).build(mockedArgs).render();
+
+        // continue your business after all setting is done.
+        System.out.println("\nBack to main, let's continue.");
+
     }
 }
