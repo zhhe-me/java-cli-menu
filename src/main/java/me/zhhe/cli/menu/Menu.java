@@ -53,8 +53,6 @@ public class Menu {
         renderMenu();
 
         execute();
-
-        context.close();
     }
 
     private void renderMenu() {
