@@ -2,10 +2,12 @@
 plugins {
     id 'java-library'
     id 'idea'
+    id 'maven-publish'
+    id 'signing'
 }
 
 group = 'cli-menu'
-version = '0.1'
+version = '0.4'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -28,4 +30,69 @@ idea {
         jdkName = '1.8'
         languageLevel = '1.8'
     }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc
+    classifier = 'javadoc'
+}
+
+//artifacts {
+//    archives sourcesJar
+//    archives javadocJar
+//}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'cli-menu'
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom {
+                name = 'CLI Menu'
+                description = 'A concise, interactive and versatile command line parser/menu for Java'
+                url = 'https://github.com/zhhe-me/java-cli-menu'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'zhhe'
+                        name = 'He Zhu'
+                        email = 'zhhe.me@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/zhhe-me/java-cli-menu.git'
+                    developerConnection = 'scm:git:ssh://git@github.com:zhhe-me/java-cli-menu.git'
+                    url = 'https://github.com/zhhe-me/java-cli-menu'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            //url = "$buildDir/repo"
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username ossrhUsername
+                password ossrhPassword
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
 }

@@ -8,3 +8,4 @@
  */
 
 rootProject.name = 'cli-menu'
+enableFeaturePreview('STABLE_PUBLISHING')
