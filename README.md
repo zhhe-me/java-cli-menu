@@ -30,7 +30,21 @@ Your input [# value]: x
 Back to main, let's continue.
 ```
 
-Just try to run 
+## Using cli-menu via Maven:
+```maven
+<dependency>
+    <groupId>com.github.zhhe-me</groupId>
+    <artifactId>cli-menu</artifactId>
+    <version>0.4.1</version>
+</dependency>
+```
+
+## Using cli-menu via Gradle:
+```gradle
+compile group: 'com.github.zhhe-me', name: 'cli-menu', version: '0.4.1'
+```
+
+## Samples:
 
 - [BeanBuilderWithAnnotationSample.java](https://github.com/zhhe-me/java-cli-menu/blob/master/src/test/java/me/zhhe/cli/menu/sample/BeanBuilderWithAnnotationSample.java)  (extract argument defintion via annotation + naming convention or Java Bean) **Recommanded**
 - [BeanBuilderSample.java](https://github.com/zhhe-me/java-cli-menu/blob/master/src/test/java/me/zhhe/cli/menu/sample/BeanBuilderSample.java)  (extract argument defintion via naming convention or Java Bean) **No configuration**
